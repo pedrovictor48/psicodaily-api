@@ -1,0 +1,28 @@
+{
+    "name": "psicodaily-api",
+    "version": "1.0.0",
+    "description": "express api for psicodaily app",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "dev": "node --watch index.js"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/pedrovictor48/psicodaily-api.git"
+    },
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/pedrovictor48/psicodaily-api/issues"
+    },
+    "homepage": "https://github.com/pedrovictor48/psicodaily-api#readme",
+    "dependencies": {
+        "bcrypt": "^5.1.0",
+        "dotenv": "^16.0.3",
+        "express": "^4.18.2",
+        "joi": "^17.9.1",
+        "jsonwebtoken": "^9.0.0",
+        "mongoose": "^7.0.4"
+    }
+}
