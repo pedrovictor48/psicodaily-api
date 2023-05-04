@@ -9,6 +9,7 @@ mongoose.connect(process.env.MONGO);
 
 const User = require("./models/user");
 const Paciente = require("./models/paciente");
+const Registro = require("./models/registro");
 
 const app = express();
 
@@ -28,7 +29,7 @@ const duplicatedEmail = async (req, res, next) => {
     const { email } = req.body;
     const candidate = await User.findOne({ email: email });
     if (candidate) {
-        return res.status(409).message({ message: "Email ja cadastrado" });
+        return res.status(409).send({ message: "Email ja cadastrado" });
     }
     return next();
 };
@@ -44,14 +45,20 @@ app.post(
     async (req, res) => {
         const body = req.body;
 
-        if (bcrypt.compare(body.password, candidate.password)) {
+        const candidate = await User.findOne({ email: body.email });
+        console.log(candidate.password);
+
+        if (await bcrypt.compare(body.password, candidate.password)) {
             const token = jwt.sign(
                 { userId: candidate._id },
-                { expiresIn: 30000 }
+                process.env.SECRET,
+                {
+                    expiresIn: 30000,
+                }
             );
             res.status(200).send({ token });
         } else {
-            res.send({ message: "Senha incorreta" });
+            res.status(401).send({ message: "Senha incorreta" });
         }
     }
 );
@@ -125,8 +132,57 @@ app.post(
 app.get("/users", async (req, res) => {
     const users = await User.find({});
 
-    res.status(400).send({ users });
+    res.status(200).send({ users });
 });
+
+app.get("/registros", async (req, res) => {
+    const token = req.headers["x-access-token"];
+    if (!token) {
+        res.status(401).send({ message: "Usuario nao logado" });
+    }
+
+    console.log(token);
+
+    jwt.verify(token, process.env.SECRET, async (err, decoded) => {
+        if (err) return res.status(400).send({ err });
+        console.log(decoded.userId);
+        const id = new mongoose.Types.ObjectId(decoded.userId);
+        const user = await User.findById(id);
+        const registers = await Registro.find({ pacienteId: user._id });
+
+        res.status(200).send({ registers });
+    });
+});
+
+app.post(
+    "/registro",
+    validator(
+        joi.object({
+            date: joi.date().required(),
+            titulo: joi.string().required().max(50),
+            text: joi.string().required(),
+        })
+    ),
+    async (req, res) => {
+        const token = req.headers["x-access-token"];
+        if (!token) {
+            res.status(401).send({ message: "Usuario nao logado" });
+        }
+        const { data, titulo, text } = req.body;
+        const { userId } = jwt.verify(token, process.env.SECRET);
+
+        const newRegistro = new Registro({
+            data,
+            titulo,
+            text,
+            pacienteId: userId,
+        });
+
+        await newRegistro.save();
+
+        res.status(200).send({ registro: newRegistro });
+    }
+);
 
 app.listen(port, () => {
     console.log(`Server running at ${port}`);
