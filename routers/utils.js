@@ -5,9 +5,6 @@ require("dotenv").config();
 mongoose.connect(process.env.MONGO);
 
 const User = require("../models/user");
-const Paciente = require("../models/paciente");
-const Registro = require("../models/registro");
-const Psicologo = require("../models/psicologo");
 
 const validator = (joiSchema) => (req, res, next) => {
     console.log(req.body);
