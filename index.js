@@ -62,7 +62,8 @@ app.post(
         const body = req.body;
 
         const candidate = await User.findOne({ email: body.email });
-        console.log(candidate.password);
+        if (!candidate)
+            return res.status(401).send({ message: "Email nao cadastrado" });
 
         if (await bcrypt.compare(body.password, candidate.password)) {
             const token = jwt.sign(
@@ -74,7 +75,7 @@ app.post(
             );
             return res.status(200).send({ token, type: candidate.__t });
         } else {
-            res.status(401).send({ message: "Senha incorreta" });
+            res.status(401).send({ message: "Credenciais invalidas" });
         }
     }
 );
