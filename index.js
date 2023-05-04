@@ -138,20 +138,18 @@ app.get("/users", async (req, res) => {
 app.get("/registros", async (req, res) => {
     const token = req.headers["x-access-token"];
     if (!token) {
-        res.status(401).send({ message: "Usuario nao logado" });
+        return res.status(401).send({ message: "Usuario nao logado" });
     }
 
     console.log(token);
 
-    jwt.verify(token, process.env.SECRET, async (err, decoded) => {
-        if (err) return res.status(400).send({ err });
-        console.log(decoded.userId);
-        const id = new mongoose.Types.ObjectId(decoded.userId);
-        const user = await User.findById(id);
-        const registers = await Registro.find({ pacienteId: user._id });
+    const decoded = jwt.verify(token, process.env.SECRET);
+    console.log(decoded.userId);
+    const id = new mongoose.Types.ObjectId(decoded.userId);
+    const user = await User.findById(id);
+    const registers = await Registro.find({ pacienteId: user._id });
 
-        res.status(200).send({ registers });
-    });
+    return res.status(200).send({ registers });
 });
 
 app.post(
@@ -166,7 +164,7 @@ app.post(
     async (req, res) => {
         const token = req.headers["x-access-token"];
         if (!token) {
-            res.status(401).send({ message: "Usuario nao logado" });
+            return res.status(401).send({ message: "Usuario nao logado" });
         }
         const { data, titulo, text } = req.body;
         const { userId } = jwt.verify(token, process.env.SECRET);
@@ -180,7 +178,7 @@ app.post(
 
         await newRegistro.save();
 
-        res.status(200).send({ registro: newRegistro });
+        return res.status(200).send({ registro: newRegistro });
     }
 );
 
