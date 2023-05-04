@@ -156,7 +156,7 @@ app.post(
     "/registro",
     validator(
         joi.object({
-            date: joi.date().required(),
+            data: joi.date().required(),
             titulo: joi.string().required().max(50),
             text: joi.string().required(),
         })
