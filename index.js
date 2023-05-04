@@ -10,6 +10,7 @@ mongoose.connect(process.env.MONGO);
 const User = require("./models/user");
 const Paciente = require("./models/paciente");
 const Registro = require("./models/registro");
+const Psicologo = require("./models/psicologo");
 
 const app = express();
 
@@ -31,6 +32,21 @@ const duplicatedEmail = async (req, res, next) => {
     if (candidate) {
         return res.status(409).send({ message: "Email ja cadastrado" });
     }
+    return next();
+};
+
+const validateJWT = (req, res, next) => {
+    const token = req.headers["x-access-token"];
+    if (!token) {
+        return res.status(401).send({ message: "Usuario nao logado" });
+    }
+
+    const decoded = jwt.verify(token, process.env.SECRET);
+    if (!decoded) {
+        return res.status(401).send({ message: "Usuario nao logado" });
+    }
+
+    req.body.userId = decoded.userId;
     return next();
 };
 
@@ -56,7 +72,7 @@ app.post(
                     expiresIn: 30000,
                 }
             );
-            res.status(200).send({ token });
+            return res.status(200).send({ token, type: candidate.__t });
         } else {
             res.status(401).send({ message: "Senha incorreta" });
         }
@@ -135,18 +151,15 @@ app.get("/users", async (req, res) => {
     res.status(200).send({ users });
 });
 
-app.get("/registros", async (req, res) => {
-    const token = req.headers["x-access-token"];
-    if (!token) {
-        return res.status(401).send({ message: "Usuario nao logado" });
+app.get("/registros", validateJWT, async (req, res) => {
+    const { userId } = req.body;
+    const id = new mongoose.Types.ObjectId(userId);
+    const user = await User.findById(id);
+
+    if (user.__t == "Psicologo") {
+        return res.status(500).send({ message: "not implemented" });
     }
 
-    console.log(token);
-
-    const decoded = jwt.verify(token, process.env.SECRET);
-    console.log(decoded.userId);
-    const id = new mongoose.Types.ObjectId(decoded.userId);
-    const user = await User.findById(id);
     const registers = await Registro.find({ pacienteId: user._id });
 
     return res.status(200).send({ registers });
@@ -161,13 +174,9 @@ app.post(
             text: joi.string().required(),
         })
     ),
+    validateJWT,
     async (req, res) => {
-        const token = req.headers["x-access-token"];
-        if (!token) {
-            return res.status(401).send({ message: "Usuario nao logado" });
-        }
-        const { data, titulo, text } = req.body;
-        const { userId } = jwt.verify(token, process.env.SECRET);
+        const { data, titulo, text, userId } = req.body;
 
         const newRegistro = new Registro({
             data,
