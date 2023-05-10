@@ -1,8 +1,5 @@
-const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
-
-mongoose.connect(process.env.MONGO);
 
 const validateJWT = (req, res, next) => {
   const token = req.headers["x-access-token"];

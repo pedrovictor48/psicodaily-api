@@ -1,11 +1,10 @@
 const User = require("../models/user");
 const Registro = require("../models/registro");
-const mongoose = require("mongoose");
 
 const getRegistro = async (req, res) => {
   const { userId } = req.body;
-  const id = new mongoose.Types.ObjectId(userId);
-  const user = await User.findById(id);
+
+  const user = await User.findOne({ _id: userId });
 
   if (user.__t == "Psicologo") {
     return res.status(500).send({ message: "not implemented" });
