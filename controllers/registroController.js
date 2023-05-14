@@ -58,4 +58,9 @@ const editRegistro = async (req, res) => {
   return res.sendStatus(200);
 };
 
-module.exports = { getRegistro, postRegistro, deleteRegistro, editRegistro };
+module.exports = {
+  getRegistro,
+  postRegistro,
+  deleteRegistro,
+  editRegistro,
+};

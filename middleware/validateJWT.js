@@ -3,6 +3,7 @@ require("dotenv").config();
 
 const validateJWT = (req, res, next) => {
   const token = req.headers["x-access-token"];
+  console.log(token, "foi");
   if (!token) {
     return res.status(401).send({ message: "Usuario nao logado" });
   }
@@ -13,6 +14,8 @@ const validateJWT = (req, res, next) => {
   }
 
   req.body.userId = decoded.userId;
+  req.body.name = decoded.name;
+  req.body.email = decoded.email;
   return next();
 };
 

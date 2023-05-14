@@ -5,15 +5,15 @@ const cors = require("cors");
 const corsOptions = require("./config/corsOptions");
 const connectDB = require("./config/connectDatabase");
 
-connectDB();
-
 const app = express();
+
+app.use(cors());
+
+connectDB();
 
 const port = process.env.PORT || 3005;
 
 app.use(express.json());
-
-app.use(cors(corsOptions)); // <---
 
 const registro = require("./routers/registro");
 const auth = require("./routers/auth");

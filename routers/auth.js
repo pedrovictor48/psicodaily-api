@@ -1,7 +1,10 @@
 require("dotenv").config();
 const express = require("express");
 const router = express.Router();
-
+const cors = require("cors");
+const corsOptions = require("../config/corsOptions");
+const connectDB = require("../config/connectDatabase");
+const app = express();
 const {
   pacientSchema,
   psicologoSchema,
@@ -13,10 +16,14 @@ const {
   registerPac,
   registerPsic,
   getAllUsers,
+  getUserInfo,
 } = require("../controllers/authController");
 
 const validator = require("../middleware/joiValidator");
 const duplicatedEmail = require("../middleware/duplicatedEmail");
+const validateJWT = require("../middleware/validateJWT");
+
+app.use(cors(corsOptions)); // <---
 
 router.post("/login", validator(loginSchema), login);
 
@@ -35,5 +42,7 @@ router.post(
 );
 
 router.get("/users", getAllUsers);
+
+router.get("/userinfo", validateJWT, getUserInfo);
 
 module.exports = router;

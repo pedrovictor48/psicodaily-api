@@ -13,9 +13,17 @@ const login = async (req, res) => {
   if (!candidate) return res.sendStatus(401);
 
   if (await bcrypt.compare(body.password, candidate.password)) {
-    const token = jwt.sign({ userId: candidate._id }, process.env.SECRET, {
-      expiresIn: 30000,
-    });
+    const token = jwt.sign(
+      {
+        userId: candidate._id,
+        name: candidate.name,
+        email: candidate.email,
+      },
+      process.env.SECRET,
+      {
+        expiresIn: 30000,
+      }
+    );
     return res.status(200).send({ token, type: candidate.__t });
   } else {
     res.sendStatus(401);
@@ -69,4 +77,11 @@ const getAllUsers = async (req, res) => {
   res.status(200).send({ users });
 };
 
-module.exports = { login, registerPac, registerPsic, getAllUsers };
+const getUserInfo = async (req, res) => {
+  console.log("entrou funco");
+  const name = req.body.name;
+  const email = req.body.email;
+  console.log(name, email);
+  res.status(200).send({ name, email });
+};
+module.exports = { login, registerPac, registerPsic, getAllUsers, getUserInfo };
