@@ -11,7 +11,7 @@ app.use(cors());
 
 connectDB();
 
-const port = process.env.PORT || 3005;
+const port = process.env.PORT || "3005";
 
 app.use(express.json());
 
@@ -21,7 +21,4 @@ const auth = require("./routers/auth");
 app.use(registro);
 app.use(auth);
 
-mongoose.connection.once("open", () => {
-  console.log("Conectando ao db...");
-  app.listen(port, () => console.log(`Server running at ${port}`));
-});
+app.listen(port, () => console.log(`Server running at ${port}`));
