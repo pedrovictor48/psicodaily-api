@@ -17,8 +17,16 @@ app.use(express.json());
 
 const registro = require("./routers/registro");
 const auth = require("./routers/auth");
+const consulta = require("./routers/consulta");
+const user = require("./routers/user");
 
 app.use(registro);
 app.use(auth);
+app.use(consulta);
+app.use(user)
+
+app.get('/', (req, res) => {
+	res.send("oi")
+})
 
 app.listen(port, () => console.log(`Server running at ${port}`));

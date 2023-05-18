@@ -41,6 +41,22 @@ const editRegistroSchema = joi.object({
   text: joi.string().required(),
 });
 
+const postConsultaSchema = joi.object({
+	startDate: joi.date().required(),
+	pacId: joi.string().required(),
+});
+
+const putConsultaSchema = joi.object({
+	startDate: joi.date().required(),
+	consultaId: joi.string().required(),
+	pacId: joi.string().required(),
+});
+
+const deleteConsultaSchema = joi.object({
+	consultaId: joi.string().required(),
+});
+
+
 module.exports = {
   loginSchema,
   pacientSchema,
@@ -48,4 +64,7 @@ module.exports = {
   postRegistroSchema,
   deleteRegistroSchema,
   editRegistroSchema,
+	postConsultaSchema,
+	putConsultaSchema,
+	deleteConsultaSchema,
 };
