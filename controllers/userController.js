@@ -12,13 +12,13 @@ const getUserInfo = async (req, res) => {
 }
 
 const updateUser = async (req, res) => {
-	const {userId, name, email, cpf} = req.body
+	const {userId, newName, newEmail, cpf} = req.body
 
 	console.log("a")
 	console.log(req.body)
 
 	const user = await User.findOneAndUpdate({_id: userId},
-		{name, email, cpf}
+		{name: newName, email: newEmail, cpf}
 	)
 
 
@@ -27,12 +27,13 @@ const updateUser = async (req, res) => {
 
 const changePassword = async (req, res) => {
 	const {userId, password, newPassword} = req.body
+	console.log(newPassword)
 
 	const user = await User.findById(userId)
 	
 	if(await bcrypt.compare(password, user.password)) {
 		const hash = await bcrypt.hash(newPassword, 10);
-		user.update({password: hash})
+		await user.updateOne({password: hash})
 		return res.sendStatus(200)
 	}
 	else {

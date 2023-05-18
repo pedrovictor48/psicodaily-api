@@ -7,8 +7,8 @@ const validator = require("../middleware/joiValidator");
 
 //schemas
 const updateSchema = joi.object({
-	name: joi.string().required(),
-	email: joi.string().required(),
+	newName: joi.string().required(),
+	newEmail: joi.string().required(),
 	cpf: joi.string().required().max(11),
 })
 
@@ -24,6 +24,6 @@ router
 	.get(validateJWT, getUserInfo)
 	.put(validator(updateSchema), validateJWT, updateUser)
 
-router.put("/change_password", validator(putSchema), changePassword)
+router.put("/change_password", validator(putSchema), validateJWT, changePassword)
 
 module.exports = router
