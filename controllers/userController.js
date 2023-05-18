@@ -4,7 +4,7 @@ const bcrypt = require("bcrypt")
 const getUserInfo = async (req, res) => {
 	const {userId} = req.body
 
-	const user = await User.findOne({_id: userId}).select('name email cpf')
+	const user = await User.findOne({_id: userId}).select('name email cpf psic_id')
 
 	console.log(user)
 

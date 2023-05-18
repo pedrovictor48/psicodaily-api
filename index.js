@@ -19,11 +19,13 @@ const registro = require("./routers/registro");
 const auth = require("./routers/auth");
 const consulta = require("./routers/consulta");
 const user = require("./routers/user");
+const notif = require("./routers/notif");
 
 app.use(registro);
 app.use(auth);
 app.use(consulta);
 app.use(user)
+app.use(notif)
 
 app.get('/', (req, res) => {
 	res.send("oi")
