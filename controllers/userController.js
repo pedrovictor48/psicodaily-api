@@ -11,14 +11,16 @@ const getUserInfo = async (req, res) => {
 	return res.status(200).send(user)
 }
 
-const updateUser = async  (req, res) => {
+const updateUser = async (req, res) => {
 	const {userId, name, email, cpf} = req.body
 
-	await User.findOneAndUpdate({_id: userId}, 
-		{
-			name, email, cpf
-		}
+	console.log("a")
+	console.log(req.body)
+
+	const user = await User.findOneAndUpdate({_id: userId},
+		{name, email, cpf}
 	)
+
 
 	res.sendStatus(200)
 }
@@ -29,7 +31,7 @@ const changePassword = async (req, res) => {
 	const user = await User.findById(userId)
 	
 	if(await bcrypt.compare(password, user.password)) {
-		const hash = await bcrypt.hash(password, 10);
+		const hash = await bcrypt.hash(newPassword, 10);
 		user.update({password: hash})
 		return res.sendStatus(200)
 	}
@@ -38,4 +40,4 @@ const changePassword = async (req, res) => {
 	}
 }
 
-module.exports = {getUserInfo}
+module.exports = {getUserInfo, updateUser, changePassword}
