@@ -1,2 +1,0 @@
-MONGO=mongodb+srv://pedro2:pedroteste@cluster0.uvcqdds.mongodb.net/?retryWrites=true&w=majority
-SECRET=mysecret
