@@ -1,9 +1,9 @@
-const express = require("express");
-const router = express.Router();
-const joi = require("joi");
+const express = require('express')
+const router = express.Router()
+const joi = require('joi')
 
-const validateJWT = require("../middleware/validateJWT");
-const validator = require("../middleware/joiValidator");
+const validateJWT = require('../middleware/validateJWT')
+const validator = require('../middleware/joiValidator')
 
 //schemas
 const updateSchema = joi.object({
@@ -14,18 +14,27 @@ const updateSchema = joi.object({
 
 const putSchema = joi.object({
 	password: joi.string().required(),
-	newPassword: joi.string().required()
+	newPassword: joi.string().required(),
 })
 
-const {getUserInfo, updateUser, changePassword, getPsicUsers} = require("../controllers/userController")
+const {
+	getUserInfo,
+	updateUser,
+	changePassword,
+	getPsicUsers,
+} = require('../controllers/userController')
 
 router
-	.route("/user")
+	.route('/user')
 	.get(validateJWT, getUserInfo)
 	.put(validator(updateSchema), validateJWT, updateUser)
 
-router.put("/change_password", validator(putSchema), validateJWT, changePassword)
-router.get("/psic_users", validateJWT, getPsicUsers);
-
+router.put(
+	'/change_password',
+	validator(putSchema),
+	validateJWT,
+	changePassword
+)
+router.get('/psic_users', validateJWT, getPsicUsers)
 
 module.exports = router
