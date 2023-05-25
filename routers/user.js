@@ -17,7 +17,7 @@ const putSchema = joi.object({
 	newPassword: joi.string().required()
 })
 
-const {getUserInfo, updateUser, changePassword} = require("../controllers/userController")
+const {getUserInfo, updateUser, changePassword, getPsicUsers} = require("../controllers/userController")
 
 router
 	.route("/user")
@@ -25,5 +25,7 @@ router
 	.put(validator(updateSchema), validateJWT, updateUser)
 
 router.put("/change_password", validator(putSchema), validateJWT, changePassword)
+router.get("/psic_users", validateJWT, getPsicUsers);
+
 
 module.exports = router

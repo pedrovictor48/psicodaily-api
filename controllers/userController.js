@@ -41,4 +41,16 @@ const changePassword = async (req, res) => {
 	}
 }
 
-module.exports = {getUserInfo, updateUser, changePassword}
+const getPsicUsers = async (req, res) => {
+	const {userId} = req.body
+
+	const user = await User.findById(userId)
+
+	if(user.__t != 'Psicologo') return res.sendStatus(403)
+	
+	const patients = await User.find({psic_id: userId}).select('name email cpf _id')
+
+	return res.status(200).send(patients)
+}
+
+module.exports = {getUserInfo, updateUser, changePassword, getPsicUsers}
