@@ -9,8 +9,8 @@ const getNotifs = async (req, res) => {
 	}).aggregate({
 		$lookup: {
 			from: 'User',
-			localField: psicologoId,
-			foreignField: _id,
+			localField: 'psicologoId',
+			foreignField: '_id',
 			as: 'psicologo',
 		},
 	})
