@@ -6,6 +6,6 @@ const mensagemSchema = new mongoose.Schema({
 	text: String,
 })
 
-const Mensagem = mongoose.model('Notificacao', notifSchema)
+const Mensagem = mongoose.model('Mensagem', mensagemSchema)
 
 module.exports = Mensagem
