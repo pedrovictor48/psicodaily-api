@@ -6,6 +6,13 @@ const getMensagens = async (req, res) => {
 
 	const mensagens = await Mensagem.find({
 		$or: [{ pacienteId: userId }, { psicologoId: userId }],
+	}).aggregate({
+		$lookup: {
+			from: "User",
+			localField: psicologoId,
+			foreignField: _id,
+			as: "psicologo"
+		}
 	})
 
 	res.status(200).send(mensagens)
