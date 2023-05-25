@@ -1,66 +1,80 @@
-const Consulta = require("../models/consulta")
-const User = require("../models/user")
+const Consulta = require('../models/consulta')
+const User = require('../models/user')
 
 const getConsultas = async (req, res) => {
-	const {userId} = req.body
-	const consultas = await Consulta.find({
-		$or:  [
-			{pacienteId: userId},
-			{psicologoId: userId}
-		]
-	})
-	return res.status(200).send(consultas)
+	try {
+		const { userId } = req.body
+		const consultas = await Consulta.find({
+			$or: [{ pacienteId: userId }, { psicologoId: userId }],
+		})
+		return res.status(200).send(consultas)
+	} catch {
+		return res.sendStatus(500)
+	}
 }
 
 const addConsulta = async (req, res) => {
-	const {startDate, userId, pacId} = req.body;
-	
-	const user = await User.findOne({_id: userId})
-	
-	if(user.__t == "Paciente") {
-		return res.sendStatus(403)
-	}
+	try {
+		const { startDate, userId, pacId } = req.body
 
-	const newConsulta = new Consulta({
-		startDate,
-		pacienteId: pacId,
-		psicologoId: user._id,
-	})
+		const user = await User.findOne({ _id: userId })
 
-	await newConsulta.save()
-	return res.sendStatus(200)
-}
+		if (user.__t == 'Paciente') {
+			return res.sendStatus(403)
+		}
 
-const editConsulta = async (req, res) => {
-	const {startDate, userId, consultaId, pacId} = req.body;
-	
-	const user = await User.findOne({_id: userId})
-	
-	if(user.__t == "Paciente") {
-		return res.sendStatus(403)
-	}
-	
-	await Consulta.findOneAndUpdate({_id: consultaId}, 
-		{
+		const newConsulta = new Consulta({
 			startDate,
 			pacienteId: pacId,
 			psicologoId: user._id,
+		})
+
+		await newConsulta.save()
+		return res.sendStatus(200)
+	} catch {
+		return res.sendStatus(500)
+	}
+}
+
+const editConsulta = async (req, res) => {
+	try {
+		const { startDate, userId, consultaId, pacId } = req.body
+
+		const user = await User.findOne({ _id: userId })
+
+		if (user.__t == 'Paciente') {
+			return res.sendStatus(403)
 		}
-	)
-	return res.sendStatus(200)
+
+		await Consulta.findOneAndUpdate(
+			{ _id: consultaId },
+			{
+				startDate,
+				pacienteId: pacId,
+				psicologoId: user._id,
+			}
+		)
+		return res.sendStatus(200)
+	} catch {
+		return res.sendStatus(500)
+	}
 }
 
 const deleteConsulta = async (req, res) => {
-	const {userId, consultaId} = req.body 
-	
-	const consulta = await Consulta.findOneAndDelete({
-		$or: [
-			{_id: consultaId, pacienteId: userId},
-			{_id: consultaId, psicologoId: userId},
-		]
-	})
+	try {
+		const { userId, consultaId } = req.body
 
-	res.sendStatus(200)
+		await Consulta.findOneAndDelete({
+			$or: [
+				{ _id: consultaId, pacienteId: userId },
+				{ _id: consultaId, psicologoId: userId },
+			],
+		})
+
+		res.sendStatus(200)
+	} catch {
+		return res.sendStatus(500)
+	}
 }
 
-module.exports = {deleteConsulta, editConsulta, addConsulta, getConsultas}
+module.exports = { deleteConsulta, editConsulta, addConsulta, getConsultas }

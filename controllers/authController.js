@@ -35,44 +35,52 @@ const login = async (req, res) => {
 }
 
 const registerPac = async (req, res) => {
-	const body = req.body
+	try {
+		const body = req.body
 
-	const hash = await bcrypt.hash(body.password, 10)
+		const hash = await bcrypt.hash(body.password, 10)
 
-	const newUser = new Paciente({
-		name: body.name,
-		email: body.email,
-		password: hash,
-		cpf: body.cpf,
-	})
+		const newUser = new Paciente({
+			name: body.name,
+			email: body.email,
+			password: hash,
+			cpf: body.cpf,
+		})
 
-	await newUser.save()
+		await newUser.save()
 
-	res.status(400).send({ message: 'Usuario criado com sucesso' })
+		res.status(400).send({ message: 'Usuario criado com sucesso' })
+	} catch {
+		res.sendStatus(500)
+	}
 }
 
 const registerPsic = async (req, res) => {
-	const body = req.body
-	const sameEmail = await User.findOne({ email: body.email })
+	try {
+		const body = req.body
+		const sameEmail = await User.findOne({ email: body.email })
 
-	if (sameEmail) {
-		res.status(409).send({ message: 'Email ja cadastrado' })
-		return
+		if (sameEmail) {
+			res.status(409).send({ message: 'Email ja cadastrado' })
+			return
+		}
+
+		const hash = await bcrypt.hash(body.password, 10)
+
+		const newUser = new Psicologo({
+			name: body.name,
+			email: body.email,
+			password: hash,
+			cpf: body.cpf,
+			crp: body.crp,
+		})
+
+		await newUser.save()
+
+		res.status(400).send({ message: 'Usuario criado com sucesso' })
+	} catch {
+		return res.sendStatus(500)
 	}
-
-	const hash = await bcrypt.hash(body.password, 10)
-
-	const newUser = new Psicologo({
-		name: body.name,
-		email: body.email,
-		password: hash,
-		cpf: body.cpf,
-		crp: body.crp,
-	})
-
-	await newUser.save()
-
-	res.status(400).send({ message: 'Usuario criado com sucesso' })
 }
 
 const getAllUsers = async (req, res) => {
@@ -82,10 +90,8 @@ const getAllUsers = async (req, res) => {
 }
 
 const getUserInfo = async (req, res) => {
-	console.log('entrou funco')
 	const name = req.body.name
 	const email = req.body.email
-	console.log(name, email)
 	res.status(200).send({ name, email })
 }
 module.exports = { login, registerPac, registerPsic, getAllUsers, getUserInfo }

@@ -1,64 +1,77 @@
-const User = require("../models/user");
-const Notificacao = require("../models/notif");
-
+const User = require('../models/user')
+const Notificacao = require('../models/notif')
 
 const getNotifs = async (req, res) => {
-	const {userId} = req.body 
+	const { userId } = req.body
 
-	const notifs = await Notificacao.find({$or:[
-		{pacienteId: userId},
-		{psicologoId: userId},
-	]})
- 
+	const notifs = await Notificacao.find({
+		$or: [{ pacienteId: userId }, { psicologoId: userId }],
+	})
+
 	res.status(200).send(notifs)
 }
 
 const addNotif = async (req, res) => {
-	const {userId, pacEmail} = req.body
-	const user = await User.findById(userId)
-	if(user.__t != "Psicologo") return res.sendStatus(403)
+	try {
+		const { userId, pacEmail } = req.body
+		const user = await User.findById(userId)
+		if (user.__t != 'Psicologo') return res.sendStatus(403)
 
-	const paciente = await User.findOne({email: pacEmail})
+		const paciente = await User.findOne({ email: pacEmail })
 
-	if(!paciente) res.sendStatus(400)
+		if (!paciente) res.sendStatus(400)
 
-	const newNotif = new Notificacao({
-		pacienteId: paciente._id,
-		psicologoId: userId
-	})
+		const newNotif = new Notificacao({
+			pacienteId: paciente._id,
+			psicologoId: userId,
+		})
 
-	await newNotif.save()
-	return res.sendStatus(200)
+		await newNotif.save()
+		return res.sendStatus(200)
+	} catch {
+		return res.sendStatus(500)
+	}
 }
 
 const deleteNotif = async (req, res) => {
-	const {userId, notifId} = req.body
+	try {
+		const { userId, notifId } = req.body
 
-	await findOneAndDelete({
-		$or: [
-			{_id: notifId, pacienteId: userId},
-			{_id: notifId, psicologoId: userId},
-		]
-	})
+		await findOneAndDelete({
+			$or: [
+				{ _id: notifId, pacienteId: userId },
+				{ _id: notifId, psicologoId: userId },
+			],
+		})
 
-	return res.sendStatus(200)
+		return res.sendStatus(200)
+	} catch {
+		return res.sendStatus(500)
+	}
 }
 
 const accept = async (req, res) => {
-	const {userId, notifId} = req.body
-	
-	const user = await User.findById(userId)
-	if(user.__t != "Paciente") return res.sendStatus(403)
-	
-	const notif = await Notificacao.findOne({_id: notifId, pacienteId: userId})
+	try {
+		const { userId, notifId } = req.body
 
-	if(!notif) return res.sendStatus(403)
+		const user = await User.findById(userId)
+		if (user.__t != 'Paciente') return res.sendStatus(403)
 
-	await user.updateOne({psic_id: notif.psicologoId})
+		const notif = await Notificacao.findOne({
+			_id: notifId,
+			pacienteId: userId,
+		})
 
-	await notif.deleteOne()
+		if (!notif) return res.sendStatus(403)
 
-	return res.sendStatus(200)
+		await user.updateOne({ psic_id: notif.psicologoId })
+
+		await notif.deleteOne()
+
+		return res.sendStatus(200)
+	} catch {
+		return res.sendStatus(500)
+	}
 }
 
-module.exports = {getNotifs, addNotif, deleteNotif, accept}
+module.exports = { getNotifs, addNotif, deleteNotif, accept }
