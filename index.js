@@ -20,12 +20,14 @@ const auth = require("./routers/auth");
 const consulta = require("./routers/consulta");
 const user = require("./routers/user");
 const notif = require("./routers/notif");
+const mensagem = require("./router/mensagem")
 
 app.use(registro);
 app.use(auth);
 app.use(consulta);
 app.use(user)
 app.use(notif)
+app.use(mensagem)
 
 app.get('/', (req, res) => {
 	res.send("oi")
