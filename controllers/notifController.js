@@ -11,8 +11,9 @@ const getNotifs = async (req, res) => {
 			foreignField: '_id',
 			as: 'psicologo',
 		},
-	}).find({
-		$or: [{ pacienteId: userId }, { psicologoId: userId }],
+		$match: {
+			$or: [{ pacienteId: userId }, { psicologoId: userId }],
+		},
 	})
 
 	res.status(200).send(notifs)
