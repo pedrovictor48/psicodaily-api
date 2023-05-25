@@ -20,7 +20,7 @@ const auth = require("./routers/auth");
 const consulta = require("./routers/consulta");
 const user = require("./routers/user");
 const notif = require("./routers/notif");
-const mensagem = require("./router/mensagem")
+const mensagem = require("./routers/mensagem")
 
 app.use(registro);
 app.use(auth);
