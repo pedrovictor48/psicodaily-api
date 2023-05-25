@@ -4,15 +4,15 @@ const Notificacao = require('../models/notif')
 const getNotifs = async (req, res) => {
 	const { userId } = req.body
 
-	const notifs = await Notificacao.find({
-		$or: [{ pacienteId: userId }, { psicologoId: userId }],
-	}).aggregate({
+	const notifs = await Notificacao.aggregate({
 		$lookup: {
 			from: 'User',
 			localField: 'psicologoId',
 			foreignField: '_id',
 			as: 'psicologo',
 		},
+	}).find({
+		$or: [{ pacienteId: userId }, { psicologoId: userId }],
 	})
 
 	res.status(200).send(notifs)
