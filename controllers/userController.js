@@ -1,4 +1,5 @@
 const User = require('../models/user')
+const Patient = require('../models/paciente')
 const bcrypt = require('bcrypt')
 
 const getUserInfo = async (req, res) => {
@@ -46,9 +47,9 @@ const getPsicUsers = async (req, res) => {
 
 	if (user.__t != 'Psicologo') return res.sendStatus(403)
 
-	const patients = await User.find({ psic_id: userId }).select(
-		'name email cpf _id'
-	)
+	console.log(userId);
+
+	const patients = await Patient.find({ psic_id: userId })
 
 	return res.status(200).send(patients)
 }

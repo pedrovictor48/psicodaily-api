@@ -36,5 +36,4 @@ router.put(
 	changePassword
 )
 router.get('/psic_users', validateJWT, getPsicUsers)
-
 module.exports = router
