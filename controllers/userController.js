@@ -40,7 +40,7 @@ const changePassword = async (req, res) => {
 
 		const user = await User.findById(userId)
 
-		if (bcrypt.compare(password, user.password)) {
+		if (await bcrypt.compare(password, user.password)) {
 			const hash = await bcrypt.hash(newPassword, 10)
 			await user.updateOne({ password: hash })
 			return res.sendStatus(200)
