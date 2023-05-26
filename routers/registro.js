@@ -21,7 +21,8 @@ router
   .route("/registro")
   .get(validateJWT, getRegistro)
   .post(validator(postRegistroSchema), validateJWT, postRegistro)
-  .delete(validator(deleteRegistroSchema), validateJWT, deleteRegistro)
   .put(validator(editRegistroSchema), validateJWT, editRegistro);
+
+router.delete("/registro/:registroId", validateJWT, deleteRegistro);
 
 module.exports = router;

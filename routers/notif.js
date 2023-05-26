@@ -7,28 +7,29 @@ const validateJWT = require("../middleware/validateJWT");
 const validator = require("../middleware/joiValidator");
 
 const {
-	getNotifs,
-	addNotif,
-	deleteNotif,
-	accept,
-} = require("../controllers/notifController")
+  getNotifs,
+  addNotif,
+  deleteNotif,
+  accept,
+} = require("../controllers/notifController");
 
 // to fazendo aq pq o utilities ja ta cheio de exports dps penso melhor
 const postSchema = joi.object({
-	pacEmail: joi.string().required()
-})
+  pacEmail: joi.string().required(),
+});
 
 const deleteSchema = joi.object({
-	notifId: joi.string().required()
-})
+  notifId: joi.string().required(),
+});
 
 router
-	.route("/notif")
-	.get(validateJWT, getNotifs)
-	.post(validator(postSchema), validateJWT, addNotif)
-	.delete(validator(deleteSchema), validateJWT, deleteNotif)
+  .route("/notif")
+  .get(validateJWT, getNotifs)
+  .post(validator(postSchema), validateJWT, addNotif);
+
+router.delete("/notif/:notifId", validateJWT, deleteNotif);
 
 // essa rota accept so pra vincular
-router.put("/accept", validator(deleteSchema), validateJWT, accept);
-	
-module.exports = router
+router.post("/accept", validator(deleteSchema), validateJWT, accept);
+
+module.exports = router;
