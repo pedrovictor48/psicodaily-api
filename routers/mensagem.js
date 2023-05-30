@@ -18,7 +18,8 @@ const postSchema = joi.object({
 
 router
 	.route('/mensagem')
-	.get(validateJWT, getMensagens)
 	.post(validator(postSchema), validateJWT, addMensagem)
+
+router.get('/mensagem/:pacienteId?', validateJWT, getMensagens)
 
 module.exports = router

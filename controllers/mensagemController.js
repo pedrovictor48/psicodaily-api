@@ -3,32 +3,39 @@ const User = require('../models/user')
 
 const getMensagens = async (req, res) => {
 	const { userId } = req.body
+	const { pacienteId } = req.params
 
-	const mensagens = await Mensagem.find({
-		$or: [{ pacienteId: userId }, { psicologoId: userId }],
-	}).aggregate({
-		$lookup: {
-			from: "User",
-			localField: psicologoId,
-			foreignField: _id,
-			as: "psicologo"
-		}
-	})
+	const user = await User.findById(userId)
 
-	res.status(200).send(mensagens)
+	if(user.__t == 'Psicologo') {
+		const candidate = await User.find({_id: pacienteId, psic_id: userId})
+
+		if(!candidate) return res.sendStatus(403)
+
+		const messages = Mensagem.find({psicologoId: userId, pacienteId: pacienteId})
+		return res.status(200).send(messages)
+	}
+	else {
+		const messages = await Mensagem.find({pacienteId: userId, psicologoId: user.psic_id})
+		return res.status(200).send(messages)
+	}
 }
 
 const addMensagem = async (req, res) => {
-	const {userId, receiverId, text} = req.body
+	const { userId, receiverId, text } = req.body
 	const user = await User.findById(userId)
-	if(!user || user.__t != 'Psicologo') return res.sendStatus(403)
+	if (!user || user.__t != 'Psicologo') return res.sendStatus(403)
+
+	const candidate = await User.find({_id: receiverId, psic_id: userId})
+	if(!candidate) return res.sendStatus(403)
 
 	const mensagem = new Mensagem({
 		psicologoId: userId,
 		pacienteId: receiverId,
-		text
+		text,
+		senderName: user.name
 	})
 	await mensagem.save()
 }
 
-module.exports = {getMensagens, addMensagem}
+module.exports = { getMensagens, addMensagem }
