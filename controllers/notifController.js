@@ -44,7 +44,7 @@ const deleteNotif = async (req, res) => {
     const { userId } = req.body;
     const { notifId } = req.params;
 
-    await findOneAndDelete({
+    await Notificacao.findOneAndDelete({
       $or: [
         { _id: notifId, pacienteId: userId },
         { _id: notifId, psicologoId: userId },
