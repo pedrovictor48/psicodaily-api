@@ -36,6 +36,7 @@ const addMensagem = async (req, res) => {
 		senderName: user.name
 	})
 	await mensagem.save()
+	return res.sendStatus(200)
 }
 
 module.exports = { getMensagens, addMensagem }
