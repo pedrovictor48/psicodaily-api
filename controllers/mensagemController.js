@@ -1,5 +1,6 @@
 const Mensagem = require('../models/mensagem')
 const User = require('../models/user')
+const Paciente = require('../models/paciente')
 
 const getMensagens = async (req, res) => {
 	const { userId } = req.body
@@ -9,7 +10,7 @@ const getMensagens = async (req, res) => {
 
 	if(user.__t == 'Psicologo') {
 		if(!pacienteId) return res.sendStatus(403)
-		const candidate = await User.findOne({_id: pacienteId, psic_id: userId})
+		const candidate = await Paciente.findOne({_id: pacienteId, psic_id: userId})
 		
 		if(!candidate) return res.sendStatus(403)
 
