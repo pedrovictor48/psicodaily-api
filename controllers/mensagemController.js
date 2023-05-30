@@ -12,7 +12,7 @@ const getMensagens = async (req, res) => {
 
 		if(!candidate) return res.sendStatus(403)
 
-		const messages = Mensagem.find({psicologoId: userId, pacienteId: pacienteId})
+		const messages = await Mensagem.find({psicologoId: userId, pacienteId: pacienteId})
 		return res.status(200).send(messages)
 	}
 	else {
