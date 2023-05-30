@@ -8,7 +8,13 @@ const getNotifs = async (req, res) => {
     $or: [{ pacienteId: userId }, { psicologoId: userId }],
   });
 
-  res.status(200).send(notifs);
+	let arr = []
+	for(let i in notifs) {
+		const psic = await User.findById(notifs[i].psicologoId)
+		arr.push({...notifs[i]._doc, psicologoNome: psic.name})
+	}
+
+  res.status(200).send(arr);
 };
 
 const addNotif = async (req, res) => {
