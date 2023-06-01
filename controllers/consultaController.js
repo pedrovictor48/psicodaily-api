@@ -4,10 +4,21 @@ const User = require('../models/user')
 const getConsultas = async (req, res) => {
 	try {
 		const { userId } = req.body
-		const consultas = await Consulta.find({
-			$or: [{ pacienteId: userId }, { psicologoId: userId }],
-		})
-		return res.status(200).send(consultas)
+		const user = await User.findById(userId)
+		if (user.__t == 'Psicologo') {
+			const { pacienteId } = req.params
+			if (!pacienteId) return res.sendStatus(400)
+			const consultas = await Consulta.find({
+				psicologoId: userId,
+				pacienteId,
+			})
+			return res.status(200).send(consultas)
+		} else {
+			const consultas = await Consulta.find({
+				pacienteId: userId,
+			})
+			return res.status(200).send(consultas)
+		}
 	} catch {
 		return res.sendStatus(500)
 	}
@@ -27,7 +38,7 @@ const addConsulta = async (req, res) => {
 			startDate,
 			pacienteId: pacId,
 			psicologoId: user._id,
-			desc
+			desc,
 		})
 
 		await newConsulta.save()
@@ -64,9 +75,9 @@ const editConsulta = async (req, res) => {
 const deleteConsulta = async (req, res) => {
 	try {
 		const { userId } = req.body
-		const {consultaId} = req.params
+		const { consultaId } = req.params
 
-		if(!consultaId) return res.sendStatus(400)
+		if (!consultaId) return res.sendStatus(400)
 
 		await Consulta.findOneAndDelete({
 			$or: [

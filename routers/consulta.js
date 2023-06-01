@@ -21,10 +21,10 @@ const {
 
 router
 	.route('/consulta')
-	.get(validateJWT, getConsultas)
 	.post(validator(postConsultaSchema), validateJWT, addConsulta)
 	.put(validator(putConsultaSchema), validateJWT, editConsulta)
 
 router.delete('/consulta/:consultaId', validateJWT, deleteConsulta)
+router.get('/consulta/:pacienteId?', validateJWT, getConsultas)
 
 module.exports = router
