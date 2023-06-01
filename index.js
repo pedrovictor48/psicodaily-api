@@ -21,6 +21,7 @@ const consulta = require("./routers/consulta");
 const user = require("./routers/user");
 const notif = require("./routers/notif");
 const mensagem = require("./routers/mensagem")
+const image = require("./controllers/imageController")
 
 app.use(registro);
 app.use(auth);
@@ -28,6 +29,7 @@ app.use(consulta);
 app.use(user)
 app.use(notif)
 app.use(mensagem)
+app.use(image)
 
 app.get('/', (req, res) => {
 	res.send("oi")
