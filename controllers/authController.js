@@ -49,7 +49,7 @@ const registerPac = async (req, res) => {
 
 		await newUser.save()
 
-		res.status(400).send({ message: 'Usuario criado com sucesso' })
+		res.status(200).send({ message: 'Usuario criado com sucesso' })
 	} catch {
 		res.sendStatus(500)
 	}
@@ -77,7 +77,7 @@ const registerPsic = async (req, res) => {
 
 		await newUser.save()
 
-		res.status(400).send({ message: 'Usuario criado com sucesso' })
+		res.status(200).send({ message: 'Usuario criado com sucesso' })
 	} catch {
 		return res.sendStatus(500)
 	}
