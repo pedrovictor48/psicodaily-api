@@ -1,5 +1,6 @@
 const User = require("../models/user");
 const Registro = require("../models/registro");
+const Paciente = require("../models/paciente")
 
 const getRegistro = async (req, res) => {
   try {
@@ -8,7 +9,14 @@ const getRegistro = async (req, res) => {
     const user = await User.findOne({ _id: userId });
 
     if (user.__t == "Psicologo") {
-      return res.status(500).send({ message: "not implemented" });
+		const {pacienteId} = req.params
+		if(!pacienteId) return res.sendStatus(400)
+		const candidate = await Paciente.findOne({psic_id: userId, _id: pacienteId});
+
+		if(!candidate) return res.sendStatus(403)
+
+		const consultas = await Registro.find({pacienteId});
+		return res.status(200).send(consultas);
     }
 
     const registers = await Registro.find({ pacienteId: user._id });

@@ -23,6 +23,8 @@ router
   .post(validator(postRegistroSchema), validateJWT, postRegistro)
   .put(validator(editRegistroSchema), validateJWT, editRegistro);
 
+router.get("/registro/:pacienteId?", validateJWT, getRegistro)
+
 router.delete("/registro/:registroId", validateJWT, deleteRegistro);
 
 module.exports = router;
