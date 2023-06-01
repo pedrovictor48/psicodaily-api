@@ -2,19 +2,23 @@ const User = require('../models/user')
 const Notificacao = require('../models/notif')
 
 const getNotifs = async (req, res) => {
-	const { userId } = req.body
+	try {
+		const { userId } = req.body
 
-	const notifs = await Notificacao.find({
-		$or: [{ pacienteId: userId }, { psicologoId: userId }],
-	})
+		const notifs = await Notificacao.find({
+			$or: [{ pacienteId: userId }, { psicologoId: userId }],
+		})
 
-	let arr = []
-	for (let i in notifs) {
-		const psic = await User.findById(notifs[i].psicologoId)
-		arr.push({ ...notifs[i]._doc, psicologoNome: psic.name })
+		let arr = []
+		for (let i in notifs) {
+			const psic = await User.findById(notifs[i].psicologoId)
+			arr.push({ ...notifs[i]._doc, psicologoNome: psic.name })
+		}
+
+		res.status(200).send(arr)
+	} catch {
+		return res.sendStatus(500)
 	}
-
-	res.status(200).send(arr)
 }
 
 const addNotif = async (req, res) => {
