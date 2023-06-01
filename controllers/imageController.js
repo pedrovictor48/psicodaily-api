@@ -39,7 +39,7 @@ router.post(
 
 router.get('/getImage', validateJWT, async (req, res, next) => {
 	const { userId } = req.body
-	const user = findById(userId)
+	const user = await User.findById(userId)
 	const imgId = user.photo
 	// If you dont use lean(), you wont decode image as base64
 	const image = await ImageModel.findOne({ _id: imgId }).lean().exec()
