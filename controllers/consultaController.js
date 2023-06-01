@@ -15,7 +15,7 @@ const getConsultas = async (req, res) => {
 
 const addConsulta = async (req, res) => {
 	try {
-		const { startDate, userId, pacId } = req.body
+		const { startDate, userId, pacId, desc } = req.body
 
 		const user = await User.findOne({ _id: userId })
 
@@ -27,6 +27,7 @@ const addConsulta = async (req, res) => {
 			startDate,
 			pacienteId: pacId,
 			psicologoId: user._id,
+			desc
 		})
 
 		await newConsulta.save()
