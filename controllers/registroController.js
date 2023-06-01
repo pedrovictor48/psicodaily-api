@@ -30,16 +30,12 @@ const getRegistro = async (req, res) => {
 	}
 }
 
-const convertTZ = require("../utils/time")
 
 const postRegistro = async (req, res) => {
 	try {
 		const { data, titulo, text, userId } = req.body
-		const newDate = new Date()
-		const convertedDate = convertTZ(newDate, "America/Sao_Paulo")
-
 		const newRegistro = new Registro({
-			data: convertedDate,
+			data,
 			titulo,
 			text,
 			pacienteId: userId,
