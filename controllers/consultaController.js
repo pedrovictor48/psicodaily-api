@@ -62,7 +62,10 @@ const editConsulta = async (req, res) => {
 
 const deleteConsulta = async (req, res) => {
 	try {
-		const { userId, consultaId } = req.body
+		const { userId } = req.body
+		const {consultaId} = req.params
+
+		if(!consultaId) return res.sendStatus(400)
 
 		await Consulta.findOneAndDelete({
 			$or: [
