@@ -28,7 +28,7 @@ const convertTZ = require("../utils/time")
 const addMensagem = async (req, res) => {
 	const { userId, receiverId, text, data } = req.body
 	const newDate = new Date()
-	const convertedDate = convertTZ(date, "America/Sao_Paulo")
+	const convertedDate = convertTZ(newDate, "America/Sao_Paulo")
 	const user = await User.findById(userId)
 	if (!user || user.__t != 'Psicologo') return res.sendStatus(403)
 

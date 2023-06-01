@@ -36,7 +36,7 @@ const postRegistro = async (req, res) => {
 	try {
 		const { data, titulo, text, userId } = req.body
 		const newDate = new Date()
-		const convertedDate = convertTZ(date, "America/Sao_Paulo")
+		const convertedDate = convertTZ(newDate, "America/Sao_Paulo")
 
 		const newRegistro = new Registro({
 			data: convertedDate,
