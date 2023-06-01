@@ -5,6 +5,7 @@ const mensagemSchema = new mongoose.Schema({
 	psicologoId: { type: mongoose.Schema.Types.ObjectId, ref: 'Psicologo' },
 	text: String,
 	senderName: String,
+	data: Date
 })
 
 const Mensagem = mongoose.model('Mensagem', mensagemSchema)

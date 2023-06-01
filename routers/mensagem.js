@@ -14,6 +14,7 @@ const {
 const postSchema = joi.object({
 	receiverId: joi.string().required(),
 	text: joi.string().required(),
+	data: joi.date()
 })
 
 router

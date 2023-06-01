@@ -24,7 +24,7 @@ const getMensagens = async (req, res) => {
 }
 
 const addMensagem = async (req, res) => {
-	const { userId, receiverId, text } = req.body
+	const { userId, receiverId, text, data } = req.body
 	const user = await User.findById(userId)
 	if (!user || user.__t != 'Psicologo') return res.sendStatus(403)
 
@@ -35,7 +35,8 @@ const addMensagem = async (req, res) => {
 		psicologoId: userId,
 		pacienteId: receiverId,
 		text,
-		senderName: user.name
+		senderName: user.name,
+		data,
 	})
 	await mensagem.save()
 	return res.sendStatus(200)
