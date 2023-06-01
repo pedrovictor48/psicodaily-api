@@ -32,7 +32,7 @@ router.post(
 		const savedImage = await ImageModel.create(image)
 
 		//setar
-		await User.findOneAndUpdate({ _id: userId }, { photo: saevdImage._id })
+		await User.findOneAndUpdate({ _id: userId }, { photo: savedImage._id })
 		res.send(savedImage)
 	}
 )
