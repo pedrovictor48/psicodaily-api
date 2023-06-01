@@ -23,7 +23,7 @@ const getMensagens = async (req, res) => {
 	}
 }
 
-const convertTZ = require("../utls/time")
+const convertTZ = require("../utils/time")
 
 const addMensagem = async (req, res) => {
 	const { userId, receiverId, text, data } = req.body

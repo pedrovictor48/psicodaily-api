@@ -30,6 +30,8 @@ const getRegistro = async (req, res) => {
 	}
 }
 
+const convertTZ = require("../utils/time")
+
 const postRegistro = async (req, res) => {
 	try {
 		const { data, titulo, text, userId } = req.body
