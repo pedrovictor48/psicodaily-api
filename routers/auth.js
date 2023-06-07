@@ -41,6 +41,10 @@ router.post(
   registerPsic
 );
 
+router.get("/teste/", (req, res) => {
+  res.send("teste");
+});
+
 router.get("/users", getAllUsers);
 
 router.get("/userinfo", validateJWT, getUserInfo);
