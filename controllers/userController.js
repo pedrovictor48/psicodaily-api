@@ -1,73 +1,68 @@
-const User = require('../models/user')
-const Patient = require('../models/paciente')
-const bcrypt = require('bcrypt')
+const User = require("../models/user");
+const Patient = require("../models/paciente");
+const bcrypt = require("bcrypt");
 
 const getUserInfo = async (req, res) => {
-	try {
-		const { userId } = req.body
+  try {
+    const { userId } = req.body;
 
-		const user = await User.findOne({ _id: userId }).select(
-			'name email cpf psic_id'
-		)
+    const user = await User.findOne({ _id: userId }).select(
+      "name email cpf psic_id"
+    );
 
-		console.log(user)
-
-		return res.status(200).send(user)
-	} catch {
-		return res.sendStatus(500)
-	}
-}
+    return res.status(200).send(user);
+  } catch {
+    return res.sendStatus(500);
+  }
+};
 
 const updateUser = async (req, res) => {
-	try {
-		const { userId, newName, newEmail, cpf } = req.body
+  try {
+    const { userId, newName, newEmail, cpf } = req.body;
 
-		await User.findOneAndUpdate(
-			{ _id: userId },
-			{ name: newName, email: newEmail, cpf }
-		)
+    await User.findOneAndUpdate(
+      { _id: userId },
+      { name: newName, email: newEmail, cpf }
+    );
 
-		res.sendStatus(200)
-	} catch {
-		return res.sendStatus(500)
-	}
-}
+    res.sendStatus(200);
+  } catch {
+    return res.sendStatus(500);
+  }
+};
 
 const changePassword = async (req, res) => {
-	try {
-		const { userId, password, newPassword } = req.body
-		console.log(newPassword)
+  try {
+    const { userId, password, newPassword } = req.body;
 
-		const user = await User.findById(userId)
+    const user = await User.findById(userId);
 
-		if (await bcrypt.compare(password, user.password)) {
-			const hash = await bcrypt.hash(newPassword, 10)
-			await user.updateOne({ password: hash })
-			return res.sendStatus(200)
-		} else {
-			return res.sendStatus(403)
-		}
-	} catch {
-		return res.sendStatus(500)
-	}
-}
+    if (await bcrypt.compare(password, user.password)) {
+      const hash = await bcrypt.hash(newPassword, 10);
+      await user.updateOne({ password: hash });
+      return res.sendStatus(200);
+    } else {
+      return res.sendStatus(403);
+    }
+  } catch {
+    return res.sendStatus(500);
+  }
+};
 
 const getPsicUsers = async (req, res) => {
-	try {
-		const { userId } = req.body
+  try {
+    const { userId } = req.body;
 
-		const user = await User.findById(userId)
+    const user = await User.findById(userId);
 
-		if (user.__t != 'Psicologo') return res.sendStatus(403)
+    if (user.__t != "Psicologo") return res.sendStatus(403);
 
-		console.log(userId)
+    const patients = await Patient.find({ psic_id: userId });
 
-		const patients = await Patient.find({ psic_id: userId })
+    return res.status(200).send(patients);
+  } catch {
+    return res.sendStatus(500);
+  }
+};
 
-		return res.status(200).send(patients)
-	} catch {
-		return res.sendStatus(500)
-	}
-}
-
-module.exports = { getUserInfo, updateUser, changePassword, getPsicUsers }
+module.exports = { getUserInfo, updateUser, changePassword, getPsicUsers };

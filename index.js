@@ -1,8 +1,6 @@
 require("dotenv").config();
-const mongoose = require("mongoose");
 const express = require("express");
 const cors = require("cors");
-const corsOptions = require("./config/corsOptions");
 const connectDB = require("./config/connectDatabase");
 
 const app = express();
@@ -37,4 +35,5 @@ app.get("/", (req, res) => {
 app.get("/ola", (req, res) => {
   res.send("ola");
 });
+
 app.listen(port, () => console.log(`Server running at ${port}`));
